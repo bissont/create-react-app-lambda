@@ -10,26 +10,31 @@ class LambdaDemo extends Component {
   }
 
   handleClick = (e) => {
+    console.log("hello from handle click")
     e.preventDefault();
-    console.log("hello")
 
     this.setState({loading: true});
     fetch('/.netlify/functions/hello')
       .then(response => response.json())
       .then(json => this.setState({loading: false, msg: json.msg}));
+    console.log("outfrom handle click")
   }
 
   handleSubmit(e) {
+    console.log("here in handleSubmit")
     e.preventDefault();
-    this.setState({loading: true});
+     this.setState({loading: true, msg: null});
     const data = new FormData(e.target)
     for (var pair of data.entries()) {
       console.log("hello " + pair[0] +', '+ pair[1])
     }
     fetch('/.netlify/functions/hello?to='+pair[1])
     .then(response => response.json())
-    .then(json => this.setState({msg: json.msg}));
+    .then(json => {
+        this.setState({msg: json.msg });
+    })
   }
+//-          <img src="/happy.jpg" width="100"></img>
 
   function 
   render() {
@@ -37,10 +42,10 @@ class LambdaDemo extends Component {
 
     return <div>
       <form name="get-url" onSubmit={this.handleSubmit}>
-      <input id="theurl" name="theurl" type="url" />
-      <button type="submit">Get House Location</button>
-      </form>
-      <span>{msg}</span>
+      <input id="theurl" name="theurl" type="text" />
+      <button type="submit">Get sentiment</button>
+      </form> 
+      <span>sentiment: {msg}</span>
       </div>
   }
 }
@@ -50,8 +55,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Airbnb user sentiment analysis</h1>
         </header>
         <p></p>
         <LambdaDemo/>
